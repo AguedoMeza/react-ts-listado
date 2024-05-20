@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridRowSelectionModel, GridPaginationModel } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { createAPIEndpoint, AMBIENTES } from '../../services/GeneralServices';
 import { Grid, Button, Tooltip, Typography } from '@mui/material';
 
@@ -10,7 +10,7 @@ interface PaginatedDataGridProps<T> {
   columns: GridColDef[];
   asignarEnlaces: (selectedOptions: CustomState) => void;
   selectedOptions: CustomState;
-  handleSelectionChange: (selection: GridRowSelectionModel) => void;
+  handleSelectionChange: (selection: GridSelectionModel) => void;
   Mostrar: boolean;
 }
 
@@ -49,7 +49,7 @@ const PaginatedDataGrid = <T,>({
   }, [currentPage, pageSize]);
 
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
+    setCurrentPage(newPage + 1);
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
@@ -63,11 +63,6 @@ const PaginatedDataGrid = <T,>({
       count > 1
         ? `${count.toLocaleString()} filas seleccionadas`
         : `${count.toLocaleString()} fila seleccionada`,
-  };
-
-  const paginationModel = {
-    page: currentPage - 1, // MUI pages are zero-based
-    pageSize: pageSize,
   };
 
   return (
@@ -84,15 +79,14 @@ const PaginatedDataGrid = <T,>({
             columns={columns}
             checkboxSelection
             getRowId={(row: any) => row.uuid}
-            onRowSelectionModelChange={handleSelectionChange}
+            onSelectionModelChange={(selection) => handleSelectionChange(selection as GridSelectionModel)}
             localeText={customLocaleText}
             paginationMode="server"
             rowCount={rowCount}
-            paginationModel={paginationModel}
-            onPaginationModelChange={(params: GridPaginationModel) => {
-              handlePageChange(params.page + 1); // Adjusting for zero-based index
-              handlePageSizeChange(params.pageSize);
-            }}
+            page={currentPage - 1}
+            pageSize={pageSize}
+            onPageChange={(params) => handlePageChange(params)}
+            onPageSizeChange={(params) => handlePageSizeChange(params)}
             pagination
           />
         </Grid>
