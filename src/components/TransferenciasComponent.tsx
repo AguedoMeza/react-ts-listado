@@ -19,7 +19,7 @@ const columns = [
 const TransferenciasComponent: React.FC = () => {
   const [transferencias, setTransferencias] = useState<Transferencia[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // Page size default value
+  const [pageSize, setPageSize] = useState(100); // Page size default value
   const [rowCount, setRowCount] = useState(0); // Total number of rows
 
   const fetchData = (page: number, pageSize: number) => {
