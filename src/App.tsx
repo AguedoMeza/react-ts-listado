@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from 'react';
 import './App.css';
-import Transferencias from './components/TransferenciasComponent';
+import Transferencias from './modules/TransferenciasComponent';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
