@@ -24,7 +24,7 @@ const TransferenciasComponent: React.FC = () => {
       asignarEnlaces={() => {}} // Define this function based on your needs
       selectedOptions={selectedOptions}
       handleSelectionChange={handleSelectionChange}
-      Mostrar={true} // Adjust based on your display logic
+      Mostrar={false} // Adjust based on your display logic
     />
   );
 };
