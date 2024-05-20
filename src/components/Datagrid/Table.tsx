@@ -1,9 +1,9 @@
 import React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowSelectionModel, GridPaginationModel, DataGridProps } from '@mui/x-data-grid';
 import { Button, Grid, Tooltip } from "@mui/material";
 
 interface CustomState {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
 
 interface Transferencia {
@@ -18,18 +18,28 @@ interface DataGridModularProps {
   columns: GridColDef[];
   asignarEnlaces: (selectedOptions: CustomState) => void;
   selectedOptions: CustomState;
-  handleSelectionChange: (selection: any) => void;
+  handleSelectionChange: (selection: GridRowSelectionModel) => void;
   Mostrar: boolean;
+  onPageChange: (page: number) => void;
+  rowCount: number;
+  page: number;
+  pageSize: number;
+  onPageSizeChange: (pageSize: number) => void;
 }
 
-const DataGridModular = ({
+const DataGridModular: React.FC<DataGridModularProps> = ({
   rowsAltas,
   columns,
   asignarEnlaces,
   selectedOptions,
   handleSelectionChange,
-  Mostrar
-}: DataGridModularProps) => {
+  Mostrar,
+  onPageChange,
+  rowCount,
+  page,
+  pageSize,
+  onPageSizeChange
+}) => {
 
   const customLocaleText = {
     noRowsLabel: 'No se encontraron resultados',
@@ -38,6 +48,11 @@ const DataGridModular = ({
       count > 1
         ? `${count.toLocaleString()} filas seleccionadas`
         : `${count.toLocaleString()} fila seleccionada`,
+  };
+
+  const paginationModel = {
+    page: page - 1, // MUI pages are zero-based
+    pageSize: pageSize,
   };
 
   return (
@@ -53,10 +68,17 @@ const DataGridModular = ({
             columns={columns}
             checkboxSelection
             getRowId={(row: any) => row.uuid}
-            onRowSelectionModelChange={(s) => handleSelectionChange(s)}
+            onRowSelectionModelChange={handleSelectionChange}
             localeText={customLocaleText}
+            paginationMode="server"
+            rowCount={rowCount}
+            paginationModel={paginationModel}
+            onPaginationModelChange={(params: GridPaginationModel) => {
+              onPageChange(params.page + 1); // Adjusting for zero-based index
+              onPageSizeChange(params.pageSize);
+            }}
+            pagination
           />
-
         </Grid>
         <br />
         <Tooltip title="Asignar enlaces">
@@ -79,7 +101,6 @@ const DataGridModular = ({
         </Tooltip>
         <br />
       </Grid>
-
     </>
   );
 };
